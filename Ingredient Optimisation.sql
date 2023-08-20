@@ -1,5 +1,5 @@
 ----- What are the standard ingredients for each pizza?
------ the above cte is to split the pizza recipes toppings e.g(1,5) row into two rows retaining their id the 'recursive' is to looping
+----- The below cte is to split the pizza recipes toppings e.g(1,5) row into two rows retaining their id the 'recursive' is to loop
 -- Step 1: Recursive CTE to extract individual toppings from the 'toppings' column in pizza recipes
 with recursive top as (
 -- Initial part: Extract the first topping and remaining toppings for each pizza
@@ -30,7 +30,7 @@ group by pizza_name;
 
 
 ----- What was the most commonly added extra?
------ the above cte is to split the extras e.g(1,5) row into two rows retaining their id the 'recursive' is to looping
+----- The below cte is to split the extras e.g(1,5) row into two rows retaining their id the 'recursive' is to loop
 with recursive extra as (
 	select order_id, substring_index(extras, ',',1) as extras,
     substring(extras, length(substring_index(extras, ',',1)) +2) as remaining_extras
@@ -88,7 +88,8 @@ ORDER BY
 LIMIT 1;
 
 
------ Generate an order item for each record in the customers_orders table in the format of one of the following: Meat Lovers, Meat Lovers - Exclude Beef, Meat Lovers - Extra Bacon, Meat Lovers - Exclude Cheese, Bacon - Extra Mushroom, Peppers
+----- Generate an order item for each record in the customers_orders table in the format of one of the following: Meat Lovers, 
+----- Meat Lovers - Exclude Beef, Meat Lovers - Extra Bacon, Meat Lovers - Exclude Cheese, Bacon - Extra Mushroom, Peppers
 -- Step 1: Retrieve order details and assign sequential numbers to each row
 WITH new_customer_order AS (
     SELECT
@@ -98,7 +99,7 @@ WITH new_customer_order AS (
         exclusions,
         extras,
         order_time,
-        ROW_NUMBER() OVER () AS sef
+        ROW_NUMBER() OVER () AS rank
     FROM
         customer_orders
 ),
@@ -111,7 +112,7 @@ add_exclusion AS (
         pizza_id,
         SUBSTRING_INDEX(SUBSTRING_INDEX(exclusions, ',', numbers.n), ',', -1) AS exclusions,
         extras,
-        sef
+        rank
     FROM
         new_customer_order
     CROSS JOIN (
@@ -130,7 +131,7 @@ add_extra AS (
         pizza_id,
         SUBSTRING_INDEX(SUBSTRING_INDEX(extras, ',', numbers.n), ',', -1) AS extras,
         exclusions,
-        sef
+        rank
     FROM
         add_exclusion
     CROSS JOIN (
@@ -151,7 +152,7 @@ top_name AS (
         exclusions,
         c.topping_name AS extra,
         b.topping_name AS exclusion,
-        sef
+        rank
     FROM
         add_extra
     LEFT JOIN pizza_toppings AS c
@@ -163,12 +164,12 @@ top_name AS (
 -- Step 5: Group the results to concatenate exclusion and extra names
 top_name_row AS (
     SELECT
-        sef,
+        rank,
         GROUP_CONCAT(DISTINCT exclusion) AS exclusions_name,
         GROUP_CONCAT(DISTINCT extra) AS extras_name
     FROM
         top_name
-    GROUP BY sef
+    GROUP BY rank
 )
 
 -- Step 6: Generate a summary of the order items based on pizza type, exclusions, and extras
@@ -176,23 +177,21 @@ SELECT
     order_id,
     customer_id,
     pizza_id,
-    exclusions,
-    extras,
     exclusions_name,
     extras_name,
     CASE
-        WHEN exclusions IS NULL AND extras_name IS NULL AND pizza_id = 1 THEN 'Meat lovers'
-        WHEN exclusions IS NOT NULL AND extras_name IS NULL AND pizza_id = 1 THEN CONCAT('Meat lovers - Exclude ', exclusions_name)
-        WHEN exclusions IS NULL AND extras_name IS NOT NULL AND pizza_id = 1 THEN CONCAT('Meat lovers - Extra ', extras_name)
-        WHEN exclusions IS NOT NULL AND extras_name IS NOT NULL AND pizza_id = 1 THEN CONCAT('Meat lovers - Exclude ', exclusions_name, ' Extra ', extras_name)
-        WHEN exclusions IS NULL AND extras_name IS NULL AND pizza_id = 2 THEN 'Vegetarian'
-        WHEN exclusions IS NOT NULL AND extras_name IS NULL AND pizza_id = 2 THEN CONCAT('Vegetarian - Exclude ', exclusions_name)
-        WHEN exclusions IS NULL AND extras_name IS NOT NULL AND pizza_id = 2 THEN CONCAT('Vegetarian - Extra ', extras_name)
-        ELSE CONCAT('Vegeterian - Exclude ', exclusions_name, 'Extra ', extras_name)
+        WHEN exclusions_name IS NULL AND extras_name IS NULL AND pizza_id = 1 THEN 'Meat lovers'
+        WHEN exclusions_name IS NOT NULL AND extras_name IS NULL AND pizza_id = 1 THEN CONCAT('Meat lovers - Exclude ', exclusions_name)
+        WHEN exclusions_name IS NULL AND extras_name IS NOT NULL AND pizza_id = 1 THEN CONCAT('Meat lovers - Extra ', extras_name)
+        WHEN exclusions_name IS NOT NULL AND extras_name IS NOT NULL AND pizza_id = 1 THEN CONCAT('Meat lovers - Exclude ', exclusions_name, ' Extra ', extras_name)
+        WHEN exclusions_name IS NULL AND extras_name IS NULL AND pizza_id = 2 THEN 'Vegetarian'
+        WHEN exclusions_name IS NOT NULL AND extras_name IS NULL AND pizza_id = 2 THEN CONCAT('Vegetarian - Exclude ', exclusions_name)
+        WHEN exclusions_name IS NULL AND extras_name IS NOT NULL AND pizza_id = 2 THEN CONCAT('Vegetarian - Extra ', extras_name)
+        ELSE CONCAT('Vegetarian - Exclude ', exclusions_name, 'Extra ', extras_name)
     END AS order_item,
     order_time
 FROM
     new_customer_order
 INNER JOIN top_name_row
-USING (sef);
+USING (rank);
 

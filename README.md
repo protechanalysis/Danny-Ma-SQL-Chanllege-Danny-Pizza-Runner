@@ -1,7 +1,8 @@
-# Danny-Pizza-runner
+# <p align="center" style="margin-top: 0px;"> 🍕 Danny-Pizza-runner 🍕
+
 ![](image_case_study_2.png)
 
-## Introduction
+## <p align="center" style="margin-top: 0px;"> Introduction
 
 Were you aware that a staggering 115 million kilograms of pizza are consumed globally on a daily basis? (At least, that's what Wikipedia tells us...)
 
@@ -11,7 +12,7 @@ Danny was immediately captivated by the idea, recognizing that Pizza alone would
 
 Danny's first step involved recruiting "runners" to deliver freshly made pizzas from the Pizza Runner Headquarters (also known as Danny's residence). Additionally, he went all in by utilizing his credit card to engage freelance developers in creating a mobile app capable of receiving customer orders.
 
-## Available Data
+## <p align="center" style="margin-top: 0px;"> Available Data
 
 Because Danny had a few years of experience as a data scientist - he was very aware that data collection was going to be critical for his business’ growth.
 
@@ -19,7 +20,7 @@ He has prepared for us an entity relationship diagram of his database design but
 
 
 
-## Entity Relationship Diagram
+### <p align="center" style="margin-top: 0px;"> Entity Relationship Diagram
 All datasets exist within the pizza_runner database schema 
 
 ![](ERD_pizza.PNG)
@@ -31,7 +32,7 @@ All datasets exist within the pizza_runner database schema
 ![](table4_pizza.PNG)
 
 
-## Case Study Questions
+## <p align="center" style="margin-top: 0px;"> Case Study Questions
 
 ### A. Pizza Metrics
 1.  How many pizzas were ordered?
@@ -45,6 +46,7 @@ All datasets exist within the pizza_runner database schema
 9.  What was the total volume of pizzas ordered for each hour of the day?
 10.  What was the volume of orders for each day of the week? [Go to solution](https://github.com/protechanalysis/Danny-Pizza-runner/blob/main/Pizza%20Metrics.sql)
 
+
 ### B. Runner and Customer Experience
 1.  How many runners signed up for each 1 week period? (i.e. week starts 2021-01-01)
 2.  What was the average time in minutes it took for each runner to arrive at the Pizza Runner HQ to pick up the order?
@@ -53,6 +55,7 @@ All datasets exist within the pizza_runner database schema
 5.  What was the difference between the longest and shortest delivery times for all orders?
 6.  What was the average speed for each runner for each delivery and do you notice any trend for these values?
 7.  What is the successful delivery percentage for each runner? [Go to solution](https://github.com/protechanalysis/Danny-Pizza-runner/blob/main/Runner%20and%20Customer%20Experience.sql)
+
 
 ### C. Ingredient Optimisation 
 1.  What are the standard ingredients for each pizza?
@@ -63,6 +66,8 @@ All datasets exist within the pizza_runner database schema
      - Meat Lovers - Exclude Beef
      - Meat Lovers - Extra Bacon
      - Meat Lovers - Exclude Cheese, Bacon - Extra Mushroom, Peppers [Go to solution](https://github.com/protechanalysis/Danny-Pizza-runner/blob/main/Ingredient%20Optimisation.sql)
+
+       
 ### D. Pricing and Ratings
 1.  If a Meat Lovers pizza costs $12 and Vegetarian costs $10 and there were no charges for changes - how much money has Pizza Runner made so far if there are no delivery fees?
 2.  What if there was an additional $1 charge for any pizza extras?
@@ -88,6 +93,15 @@ All datasets exist within the pizza_runner database schema
 If Danny wants to expand his range of pizzas - how would this impact the existing data design? Write an INSERT statement to demonstrate what would happen if a new Supreme pizza with all the toppings was added to the Pizza Runner menu?
 [Go to solution](https://github.com/protechanalysis/Danny-Pizza-runner/blob/main/Bonus%20Question.sql)
 
-### Challenges faced
-Solving Ingredient Optimisation  Question 1:
-Splitting of the recipe table in order to get the standard recipes for each pizza. I did several ChatGPT prompting I was able to get the solution, which was using a recursive CTE I will call it a loop function that loops through the toppings column for each row and turn it into a long row.  With that, I was able to join and in other to get each toppings id name there i used a group concat function to get the initial recipe table this time having the standard recipe name for each pizza.
+
+
+## <p align="center" style="margin-top: 0px;"> Challenges faced
+
+
+Solving Recipe Ingredient Optimization - Question 1: Creating Standardized Pizza Recipes
+
+To tackle the challenge of optimizing ingredient usage in pizza recipes, I employed a clever solution involving a recursive Common Table Expression (CTE), which I'll refer to as a "loop function." This technique allowed me to efficiently split the recipe table, yielding standardized recipes for each pizza variant.
+
+The recursive CTE proved invaluable as it enabled me to traverse the toppings column for each row systematically, breaking down each topping into its constituent parts. By looping through this process, I effectively transformed the toppings data into an elongated row format, simplifying subsequent operations.
+
+To ensure coherence and comprehension, I then employed the GROUP_CONCAT function to consolidate the toppings' names and corresponding IDs. This facilitated the creation of an initial recipe table that now included standardized recipe names for each pizza.

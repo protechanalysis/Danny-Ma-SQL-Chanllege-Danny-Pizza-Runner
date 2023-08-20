@@ -85,4 +85,4 @@ All datasets exist within the pizza_runner database schema -which I had to impor
 
 ### E. Bonus Questions
 If Danny wants to expand his range of pizzas - how would this impact the existing data design? Write an INSERT statement to demonstrate what would happen if a new Supreme pizza with all the toppings was added to the Pizza Runner menu?
-[Go to solution]
+[Go to solution](https://github.com/protechanalysis/Danny-Pizza-runner/blob/main/Bonus%20Question.sql)

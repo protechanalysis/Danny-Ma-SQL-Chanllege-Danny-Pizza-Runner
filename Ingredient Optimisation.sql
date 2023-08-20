@@ -99,7 +99,7 @@ WITH new_customer_order AS (
         exclusions,
         extras,
         order_time,
-        ROW_NUMBER() OVER () AS rank
+        ROW_NUMBER() OVER () AS ranking
     FROM
         customer_orders
 ),
@@ -112,7 +112,7 @@ add_exclusion AS (
         pizza_id,
         SUBSTRING_INDEX(SUBSTRING_INDEX(exclusions, ',', numbers.n), ',', -1) AS exclusions,
         extras,
-        rank
+        ranking
     FROM
         new_customer_order
     CROSS JOIN (
@@ -131,7 +131,7 @@ add_extra AS (
         pizza_id,
         SUBSTRING_INDEX(SUBSTRING_INDEX(extras, ',', numbers.n), ',', -1) AS extras,
         exclusions,
-        rank
+        ranking
     FROM
         add_exclusion
     CROSS JOIN (
@@ -152,7 +152,7 @@ top_name AS (
         exclusions,
         c.topping_name AS extra,
         b.topping_name AS exclusion,
-        rank
+        ranking
     FROM
         add_extra
     LEFT JOIN pizza_toppings AS c
@@ -164,12 +164,12 @@ top_name AS (
 -- Step 5: Group the results to concatenate exclusion and extra names
 top_name_row AS (
     SELECT
-        rank,
+        ranking,
         GROUP_CONCAT(DISTINCT exclusion) AS exclusions_name,
         GROUP_CONCAT(DISTINCT extra) AS extras_name
     FROM
         top_name
-    GROUP BY rank
+    GROUP BY ranking
 )
 
 -- Step 6: Generate a summary of the order items based on pizza type, exclusions, and extras
@@ -193,5 +193,4 @@ SELECT
 FROM
     new_customer_order
 INNER JOIN top_name_row
-USING (rank);
-
+USING (ranking);

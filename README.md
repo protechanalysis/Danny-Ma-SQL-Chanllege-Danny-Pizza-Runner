@@ -20,7 +20,7 @@ He has prepared for us an entity relationship diagram of his database design but
 
 
 ## Entity Relationship Diagram
-All datasets exist within the pizza_runner database schema -which I had to import into MYSQL workbench and made necessary syntax corrections.
+All datasets exist within the pizza_runner database schema 
 
 ![](ERD_pizza.PNG)
 
@@ -83,6 +83,11 @@ All datasets exist within the pizza_runner database schema -which I had to impor
 5.  If a Meat Lovers pizza was $12 and Vegetarian $10 fixed prices with no cost for extras and each runner is paid $0.30 per kilometre travelled.
         - how much money does Pizza Runner have left over after these deliveries? [Go to solution](https://github.com/protechanalysis/Danny-Pizza-runner/blob/main/Pricing%20and%20Ratings.sql)
 
+
 ### E. Bonus Questions
 If Danny wants to expand his range of pizzas - how would this impact the existing data design? Write an INSERT statement to demonstrate what would happen if a new Supreme pizza with all the toppings was added to the Pizza Runner menu?
 [Go to solution](https://github.com/protechanalysis/Danny-Pizza-runner/blob/main/Bonus%20Question.sql)
+
+### Challenges faced
+Solving Ingredient Optimisation  Question 1:
+Splitting of the recipe table in order to get the standard recipes for each pizza. I did several ChatGPT prompting I was able to get the solution, which was using a recursive CTE I will call it a loop function that loops through the toppings column for each row and turn it into a long row.  With that, I was able to join and in other to get each toppings id name there i used a group concat function to get the initial recipe table this time having the standard recipe name for each pizza.

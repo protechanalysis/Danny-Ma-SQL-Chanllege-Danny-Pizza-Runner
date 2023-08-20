@@ -1,4 +1,4 @@
-# <p align="center" style="margin-top: 0px;"> 🍕 Danny-Pizza-runner 🍕
+# <p align="center" style="margin-top: 0px;"> 🍕 Case Study #2 - Danny's Danny-Pizza-Runner 🍕
 
 ![](image_case_study_2.png)
 

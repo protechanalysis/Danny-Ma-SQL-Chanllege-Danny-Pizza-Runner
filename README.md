@@ -33,6 +33,7 @@ All datasets exist within the pizza_runner database schema
 
 
 ## <p align="center" style="margin-top: 0px;"> Case Study Questions
+### NB: _This analysis was done using MYSQL workbench_
 
 ### A. Pizza Metrics
 1.  How many pizzas were ordered?
